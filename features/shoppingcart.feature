@@ -51,36 +51,35 @@ Feature: Menaging in products shopping cart
                 | 602.00  |
 
     Scenario: Removing items from cart using the remove button
-        Given web browser is on shopping cart page
-        And cart is not empty
+        Given the cart is not empty
+        And web browser is on shopping cart page 
         When remove button is clicked
         Then item is removed from cart
 
     Scenario: Removing items from cart by changing its quantity to zero
-        Given web browser is on shopping cart page
-        And cart is not empty
+        Given the cart is not empty 
+        And web browser is on shopping cart page
         When quantity of prodct is set to zero
         And update button is clicked
         Then item is removed from cart    
     
     Scenario Outline: Updating quantity of product to correct value in cart page
-        Given web browser is on shopping cart page
-        And the price of the iMac is $122.00
-        And iMac is in cart
-        When <correct> input is entered to quantity field
+        Given the cart is not empty 
+        And web browser is on shopping cart page
+        When <correct> input is entered to cart quantity field
         And update button is clicked
         Then quantity of updated item in cart is changed to <number> of products and the price to <price> 
 
         Examples:
                 | correct | number | price |
-                | 12      | 12     | 1464  |
-                | 1       | 1      | 122   |
-                | 3       | 3      | 366   |
+                | 12      | 12     | 7224  |
+                | 1       | 1      | 602   |
+                | 3       | 3      | 1806  |
 
     Scenario Outline: Updating quantity of product to incorrect value in cart page
-        Given web browser is on shopping cart page
-        And the cart is not empty
-        When <incorrect> input is entered to quantity field
+        Given the cart is not empty
+        And web browser is on shopping cart page
+        When <incorrect> input is entered to cart quantity field
         And update button is clicked
         Then quantity and price of products in cart is not changed
 

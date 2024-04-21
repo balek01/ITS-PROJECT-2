@@ -10,7 +10,7 @@ from selenium.webdriver.common.keys import Keys
 #Scenario Outline: Adding incorrect quantity of product to cart
 @given('web browser is on page of specific product')
 def step_given_web_browser_is_on_page_of_specific_product(context):
-    context.driver.get('"http://opencart:8080/en-gb/product/desktops/mac/imac"')
+    context.driver.get('http://opencart:8080/en-gb/product/desktops/mac/imac')
     context.items = context.driver.find_element(By.CSS_SELECTOR, "#header-cart button").text
 
 @when('{incorrect_input} is entered to "Qty" field')
@@ -102,11 +102,60 @@ def step_then_number_of_items_in_cart_is_incremented_by_1_and_the_price_is_incre
     print(expected)
     assert actual == expected
 
-#Removing items from cart using the remove button
+#Scenario:Removing items from cart using the remove button
 
 @given('web browser is on shopping cart page')
 def step_given_web_browser_is_on_shopping_cart_page(context):
-   context.execute_steps('the cart is not empty')
+   time.sleep(2)
    context.driver.get('http://opencart:8080/en-gb?route=checkout/cart')
+   
+@when('remove button is clicked')
+def step_when_remove_button_is_clicked(context):
+    context.driver.implicitly_wait(5)
+    context.driver.find_element(By.XPATH,"//button[2]/i").click()
 
+@then('item is removed from cart')
+def step_then_item_is_removed_from_cart(context):
+        context.driver.implicitly_wait(5)
+        actual = context.driver.find_element(By.CSS_SELECTOR, "#header-cart button").text
+        expected = "0 item(s) - $0.00"
+        assert actual == expected
 
+#Scenario: Removing items from cart by changing its quantity to zero
+
+@when('quantity of prodct is set to zero')
+def step_when_quantity_of_product_is_set_to_zero(context):
+    context.driver.implicitly_wait(5)
+    qty_input = context.driver.find_element(By.CSS_SELECTOR, "#shopping-cart input")
+    qty_input.clear()
+    qty_input.send_keys("0")
+
+@when('update button is clicked')
+def step_when_update_button_is_clicked(context):
+    context.driver.find_element(By.XPATH,"//*[@id='shopping-cart']/div/table/tbody/tr/td[4]/form/div/button").click()
+
+#Scenario Outline: Updating quantity of product to correct value in cart page
+@when('{correct} input is entered to cart quantity field')
+def step_when_correct_input_is_entered_to_quantity_field(context, correct):
+    context.driver.implicitly_wait(5)
+    print(correct)
+    qty_input = context.driver.find_element(By.CSS_SELECTOR, "#shopping-cart input")
+    qty_input.clear()
+    qty_input.send_keys(correct)
+
+@then('quantity of updated item in cart is changed to {number} of products and the price to {price}')
+def step_then_quantity_of_updated_item_in_cart_is_changed_to_number_of_products_and_the_price_to_price(context, number, price):
+    actual = context.driver.find_element(By.CSS_SELECTOR, "#header-cart button").text.replace(",", "")
+    expected = f"{number} item(s) - ${price}.00"
+    print(actual)
+    print(expected)
+    assert actual == expected
+
+#Scenario Outline: Updating quantity of product to incorrect value in cart page
+
+@then('quantity and price of products in cart is not changed')
+def step_then_quantity_and_price_of_products_in_cart_is_not_changed(context):
+    context.driver.implicitly_wait(5)
+    actual = context.driver.find_element(By.CSS_SELECTOR, "#header-cart button").text
+    expected = "1 item(s) - $602.00"
+    assert actual == expected
