@@ -138,13 +138,14 @@ def step_when_update_button_is_clicked(context):
 @when('{correct} input is entered to cart quantity field')
 def step_when_correct_input_is_entered_to_quantity_field(context, correct):
     context.driver.implicitly_wait(5)
-    print(correct)
     qty_input = context.driver.find_element(By.CSS_SELECTOR, "#shopping-cart input")
     qty_input.clear()
     qty_input.send_keys(correct)
+    
 
 @then('quantity of updated item in cart is changed to {number} of products and the price to {price}')
 def step_then_quantity_of_updated_item_in_cart_is_changed_to_number_of_products_and_the_price_to_price(context, number, price):
+    time.sleep(1)
     actual = context.driver.find_element(By.CSS_SELECTOR, "#header-cart button").text.replace(",", "")
     expected = f"{number} item(s) - ${price}.00"
     print(actual)
@@ -155,7 +156,7 @@ def step_then_quantity_of_updated_item_in_cart_is_changed_to_number_of_products_
 
 @then('quantity and price of products in cart is not changed')
 def step_then_quantity_and_price_of_products_in_cart_is_not_changed(context):
-    context.driver.implicitly_wait(5)
+    time.sleep(2)
     actual = context.driver.find_element(By.CSS_SELECTOR, "#header-cart button").text
     expected = "1 item(s) - $602.00"
     assert actual == expected

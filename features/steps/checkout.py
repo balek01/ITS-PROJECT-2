@@ -72,12 +72,14 @@ def step_when_any_of_required_fields_is_not_filled(context):
 
 @then('confirm order button cannot be clicked')
 def step_then_confirm_order_button_cannot_be_clicked(context):
+    context.driver.implicitly_wait(15)
     confirm_order_button =    context.driver.find_element(By.XPATH, "//button[contains(text(), 'Confirm Order')]")
     assert not confirm_order_button.is_enabled()
 
 #Scenario: Confirming order 
 @given('all required fields are filled')   
 def step_given_all_required_fields_are_filled(context):
+    context.driver.implicitly_wait(15)
     context.driver.find_element(By.ID, "input-firstname").send_keys("John")
     context.driver.find_element(By.ID, "input-lastname").send_keys("Doe")
 
