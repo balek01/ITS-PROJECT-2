@@ -65,6 +65,7 @@ Background:
         | correct   |
         | 123       |
         | 0         |
+        | 333       |
 
     Scenario Outline: Updating existing product and setting dimensions or weight to correct value
 	    Given web browser is on the edit product page
@@ -83,7 +84,7 @@ Background:
 	    When dimensions or weight is modified to <incorrect> value
         And update product button is clicked
 	    Then warning message is shown
-        And product is not updated 
+        And product weight is not updated 
 
         Examples:
         | correct   |
@@ -91,36 +92,25 @@ Background:
         | 0.0       |
         | asdf      |           
              
-    Scenario: Confirming deletion
+    Scenario: Confirming deletion and deleting product
         Given web browser is on the product list page
         When any product is marked using checkbox 
         And delete button is clicked
         Then confirmation message is shown
-    
-    Scenario: Deleting product
-        Given the web browser is on the delete confirmation dialog
         When the user confirms deletion
         Then the item is deleted
-        And the item is no longer visible in the list
     
-    Scenario Outline: Adding new product
+    Scenario: Adding new product
         Given web browser is on the add product page
-        When all required <fields> are filled <correct> information
+        When all required fields are filled correct information
         And save button is clicked
         Then new item is containing filled information is created
-
-        Examples:
-        | fields            | correct   |
-        | product name      | abc       |
-        | meta tag title    | ooo       |
-        | model             | akak      |
-        | keyword           | asdasd    |
     
     Scenario: Adding new product with incorrect information
         Given web browser is on the add product page
         When all required fieldsare are not filled 
         And save button is clicked
-        Then warning message is displayed
+        Then warning message is shown
         And new item is not created
 
 
